@@ -34,7 +34,7 @@ async function getMovies(url) {
 }
 //função de renderizar os filmes (nome, poster)
 function renderMovies(movies) {
-    moviesContainer.innerHTML = ''; // Limpa o container
+    moviesContainer.innerHTML = '';
     
     if (movies.length === 0) {
          moviesContainer.innerHTML = '<p>Nenhum filme encontrado.</p>';
@@ -42,14 +42,11 @@ function renderMovies(movies) {
     }
 
     movies.forEach(movie => {
-        // Ignora filmes sem pôster para não quebrar o layout
         if (!movie.poster_path) return;
 
-        // Cria o elemento <article>
         const movieEl = document.createElement('article');
         movieEl.classList.add('movie-card');
 
-        // Note o loading="lazy" na imagem! Crucial para o Lighthouse (Performance)
         movieEl.innerHTML = `
             <img 
                 src="${IMG_BASE_URL + movie.poster_path}" 
@@ -83,37 +80,32 @@ searchForm.addEventListener('submit', (e) => {
         getMovies(trendingUrl);
     }
 });
-// js/app.js (Lógica de Hardware - Microfone)
 
 const voiceBtn = document.getElementById('voice-btn');
 
-// Verifica se o navegador suporta a API de Reconhecimento de Voz
 const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 
 if (SpeechRecognition) {
     const recognition = new SpeechRecognition();
-    recognition.lang = 'pt-BR'; // Define o idioma para português
+    recognition.lang = 'pt-BR';
     recognition.interimResults = false;
 
-    // Quando clica no botão, inicia a escuta
     voiceBtn.addEventListener('click', () => {
         recognition.start();
-        voiceBtn.textContent = '🔴 Escutando...'; // Feedback visual
+        voiceBtn.textContent = '🔴 Escutando...';
     });
 
     // Quando reconhece a voz
     recognition.addEventListener('result', (event) => {
         const transcript = event.results[0][0].transcript;
-        searchInput.value = transcript; // Preenche o input
-        
-        // Dispara a busca automaticamente (reaproveitando a lógica que você já tinha)
+        searchInput.value = transcript; 
+
         const searchUrl = `${BASE_URL}/search/movie?query=${encodeURIComponent(transcript)}&language=pt-BR`;
         getMovies(searchUrl);
     });
 
-    // Quando termina de escutar (com ou sem sucesso)
     recognition.addEventListener('end', () => {
-        voiceBtn.textContent = '🎤'; // Retorna ao ícone original
+        voiceBtn.textContent = '🎤';
     });
 
     recognition.addEventListener('error', (event) => {
@@ -121,11 +113,10 @@ if (SpeechRecognition) {
         alert('Não foi possível reconhecer a voz. Tente novamente.');
     });
 } else {
-    // Se o navegador não suportar (ex: Firefox em alguns casos antigos)
+
     voiceBtn.style.display = 'none'; 
 }
 
-// js/app.js (adicione no final do arquivo)
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
