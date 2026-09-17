@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guia de Bolso Cine - Filmes em Alta</title>
+    <meta name="description" content="Descubra os filmes mais populares do momento no nosso catálogo atualizado.">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <header class="header">
+        <h1>Guia de Bolso Cine</h1>
+        <form id="search-form" role="search">
+            <label for="search-input" class="sr-only">Pesquisar filmes</label>
+            <input 
+                type="search" 
+                id="search-input" 
+                placeholder="Buscar filmes..." 
+                aria-label="Buscar filmes"
+                required
+            >
+            <button type="submit">Buscar</button>
+        </form>
+    </header>
+
+    <main>
+        <section id="movies-container" class="grid-container" aria-live="polite">
+        </section>
+    </main>
+
+    <script src="./js/app.js" defer></script>
+</body>
+</html>
