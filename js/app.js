@@ -83,3 +83,57 @@ searchForm.addEventListener('submit', (e) => {
         getMovies(trendingUrl);
     }
 });
+// js/app.js (Lógica de Hardware - Microfone)
+
+const voiceBtn = document.getElementById('voice-btn');
+
+// Verifica se o navegador suporta a API de Reconhecimento de Voz
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+if (SpeechRecognition) {
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'pt-BR'; // Define o idioma para português
+    recognition.interimResults = false;
+
+    // Quando clica no botão, inicia a escuta
+    voiceBtn.addEventListener('click', () => {
+        recognition.start();
+        voiceBtn.textContent = '🔴 Escutando...'; // Feedback visual
+    });
+
+    // Quando reconhece a voz
+    recognition.addEventListener('result', (event) => {
+        const transcript = event.results[0][0].transcript;
+        searchInput.value = transcript; // Preenche o input
+        
+        // Dispara a busca automaticamente (reaproveitando a lógica que você já tinha)
+        const searchUrl = `${BASE_URL}/search/movie?query=${encodeURIComponent(transcript)}&language=pt-BR`;
+        getMovies(searchUrl);
+    });
+
+    // Quando termina de escutar (com ou sem sucesso)
+    recognition.addEventListener('end', () => {
+        voiceBtn.textContent = '🎤'; // Retorna ao ícone original
+    });
+
+    recognition.addEventListener('error', (event) => {
+        console.error('Erro no reconhecimento de voz:', event.error);
+        alert('Não foi possível reconhecer a voz. Tente novamente.');
+    });
+} else {
+    // Se o navegador não suportar (ex: Firefox em alguns casos antigos)
+    voiceBtn.style.display = 'none'; 
+}
+
+// js/app.js (adicione no final do arquivo)
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(registration => {
+        console.log('Service Worker registrado com sucesso:', registration.scope);
+      })
+      .catch(error => {
+        console.log('Falha ao registrar o Service Worker:', error);
+      });
+  });
+}
